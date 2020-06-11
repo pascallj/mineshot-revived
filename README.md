@@ -27,7 +27,7 @@ The controls are the same as in the original Mineshot:
 
 The key-bindings can be changed in the Minecraft Controls menu.
 
-As there is no configuration GUI in Forge 1.15 yet, you have to change the size of the screenshot manually in: `<mc-folder>/config/mineshotrevived-client.toml`. This file will be create the first time this mod is loaded and defaults to 4K (3840x2160).
+As there is no configuration GUI in Forge 1.15 yet, you have to change the size of the screenshot manually in: `<mc-folder>/config/mineshotrevived-client.toml`. This file will be created the first time this mod is loaded and defaults to 4K (3840x2160).
 
 Please note that the screenshots created will be huge (4K is already 23,7 MB), so choose your resolution carefully. The screenshot will be a Targa image file and will therefore be limited to 65535 by 65535 pixels.
 
