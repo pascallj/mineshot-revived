@@ -23,14 +23,16 @@ import net.minecraftforge.client.event.EntityViewRenderEvent.CameraSetup;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.TickEvent.Phase;
+import net.minecraftforge.event.TickEvent.RenderTickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 import nl.pascalroeleven.minecraft.mineshotrevived.client.util.ChatUtils;
+import nl.pascalroeleven.minecraft.mineshotrevived.util.reflection.PrivateAccessor;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.FORGE)
-public class OrthoViewHandler {
+public class OrthoViewHandler implements PrivateAccessor {
 	private static final Minecraft MC = Minecraft.getInstance();
 	private static final String KEY_CATEGORY = "key.categories.mineshotrevived";
 	private static final float ZOOM_STEP = 0.5f;
@@ -74,6 +76,8 @@ public class OrthoViewHandler {
 	private int tick;
 	private int tickPrevious;
 	private double partialPrevious;
+
+	private int thirdPersonView;
 
 	public OrthoViewHandler() {
 		ClientRegistry.registerKeyBinding(keyToggle);
@@ -217,12 +221,45 @@ public class OrthoViewHandler {
 	}
 
 	@SubscribeEvent
+	public void onRenderTickStart(RenderTickEvent evt) {
+		if (!enabled || evt.phase != Phase.START) {
+			return;
+		}
+
+		if (!freeCam) {
+			// Turn off thirdPersonView off temporary
+			thirdPersonView = MC.gameSettings.thirdPersonView;
+			MC.gameSettings.thirdPersonView = 0;
+		}
+
+	}
+
+	@SubscribeEvent
 	public void cameraSetup(CameraSetup event) {
 		if (!enabled) {
 			return;
 		}
 
 		if (!freeCam) {
+			// Execute the last part of ActiveRenderInfo->update (but don't care about the
+			// renderViewEntity.isSleeping part) because we have overridden it by turning
+			// thirdPersonView off temporarily.
+			// However this time with our camera angles instead of the entity's.
+			// We also don't need to distinguish between thirdPerson and thirdPersonReverse
+			// cameras
+			setDirection(MC, yRot + 180.0F, xRot);
+
+			if (thirdPersonView > 0) {
+				movePosition(MC, -calcCameraDistance(MC, 4.0D), 0.0D, 0.0D);
+
+				// Make sure the player is rendered for this frame (side effect of temporarily
+				// disabling thirdPersonView)
+				setThirdPerson(MC, true);
+			}
+
+			// Set thirdPersonView back to what it was
+			MC.gameSettings.thirdPersonView = thirdPersonView;
+
 			event.setPitch(xRot);
 			event.setYaw(yRot + 180);
 		}
