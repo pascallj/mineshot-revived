@@ -6,7 +6,7 @@
 	},
 
 	"promos": {
-		"1.15.2-latest": "2.0.0.alpha.2",
-		"1.15.2-recommended": "2.0.0.alpha.2"
+		"1.15.2-latest": "2.0.0-alpha.2",
+		"1.15.2-recommended": "2.0.0-alpha.2"
 	}
 }
