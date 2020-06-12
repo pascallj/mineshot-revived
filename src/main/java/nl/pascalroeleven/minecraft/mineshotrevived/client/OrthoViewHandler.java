@@ -38,19 +38,30 @@ public class OrthoViewHandler {
 	private static final float ROTATE_SPEED = 4;
 	private static final float SECONDS_PER_TICK = 1f / 20f;
 
-	private final KeyBinding keyToggle = new KeyBinding("key.mineshotrevived.ortho.toggle", GLFW_KEY_KP_5, KEY_CATEGORY);
-	private final KeyBinding keyZoomIn = new KeyBinding("key.mineshotrevived.ortho.zoom_in", GLFW_KEY_KP_ADD, KEY_CATEGORY);
+	private final KeyBinding keyToggle = new KeyBinding("key.mineshotrevived.ortho.toggle", GLFW_KEY_KP_5,
+			KEY_CATEGORY);
+	private final KeyBinding keyZoomIn = new KeyBinding("key.mineshotrevived.ortho.zoom_in", GLFW_KEY_KP_ADD,
+			KEY_CATEGORY);
 	private final KeyBinding keyZoomOut = new KeyBinding("key.mineshotrevived.ortho.zoom_out", GLFW_KEY_KP_SUBTRACT,
 			KEY_CATEGORY);
-	private final KeyBinding keyRotateL = new KeyBinding("key.mineshotrevived.ortho.rotate_l", GLFW_KEY_KP_4, KEY_CATEGORY);
-	private final KeyBinding keyRotateR = new KeyBinding("key.mineshotrevived.ortho.rotate_r", GLFW_KEY_KP_6, KEY_CATEGORY);
-	private final KeyBinding keyRotateU = new KeyBinding("key.mineshotrevived.ortho.rotate_u", GLFW_KEY_KP_8, KEY_CATEGORY);
-	private final KeyBinding keyRotateD = new KeyBinding("key.mineshotrevived.ortho.rotate_d", GLFW_KEY_KP_2, KEY_CATEGORY);
-	private final KeyBinding keyRotateT = new KeyBinding("key.mineshotrevived.ortho.rotate_t", GLFW_KEY_KP_7, KEY_CATEGORY);
-	private final KeyBinding keyRotateF = new KeyBinding("key.mineshotrevived.ortho.rotate_f", GLFW_KEY_KP_1, KEY_CATEGORY);
-	private final KeyBinding keyRotateS = new KeyBinding("key.mineshotrevived.ortho.rotate_s", GLFW_KEY_KP_3, KEY_CATEGORY);
-	private final KeyBinding keyClip = new KeyBinding("key.mineshotrevived.ortho.clip", GLFW_KEY_KP_MULTIPLY, KEY_CATEGORY);
-	private final KeyBinding keyMod = new KeyBinding("key.mineshotrevived.ortho.mod", GLFW_KEY_LEFT_CONTROL, KEY_CATEGORY);
+	private final KeyBinding keyRotateL = new KeyBinding("key.mineshotrevived.ortho.rotate_l", GLFW_KEY_KP_4,
+			KEY_CATEGORY);
+	private final KeyBinding keyRotateR = new KeyBinding("key.mineshotrevived.ortho.rotate_r", GLFW_KEY_KP_6,
+			KEY_CATEGORY);
+	private final KeyBinding keyRotateU = new KeyBinding("key.mineshotrevived.ortho.rotate_u", GLFW_KEY_KP_8,
+			KEY_CATEGORY);
+	private final KeyBinding keyRotateD = new KeyBinding("key.mineshotrevived.ortho.rotate_d", GLFW_KEY_KP_2,
+			KEY_CATEGORY);
+	private final KeyBinding keyRotateT = new KeyBinding("key.mineshotrevived.ortho.rotate_t", GLFW_KEY_KP_7,
+			KEY_CATEGORY);
+	private final KeyBinding keyRotateF = new KeyBinding("key.mineshotrevived.ortho.rotate_f", GLFW_KEY_KP_1,
+			KEY_CATEGORY);
+	private final KeyBinding keyRotateS = new KeyBinding("key.mineshotrevived.ortho.rotate_s", GLFW_KEY_KP_3,
+			KEY_CATEGORY);
+	private final KeyBinding keyClip = new KeyBinding("key.mineshotrevived.ortho.clip", GLFW_KEY_KP_MULTIPLY,
+			KEY_CATEGORY);
+	private final KeyBinding keyMod = new KeyBinding("key.mineshotrevived.ortho.mod", GLFW_KEY_LEFT_CONTROL,
+			KEY_CATEGORY);
 
 	private boolean enabled;
 	private boolean freeCam;
@@ -137,6 +148,29 @@ public class OrthoViewHandler {
 		return keyMod.isKeyDown();
 	}
 
+	private void updateZoomAndRotation(double multi) {
+		if (keyZoomIn.isKeyDown()) {
+			zoom *= 1 - ZOOM_STEP * multi;
+		}
+		if (keyZoomOut.isKeyDown()) {
+			zoom *= 1 + ZOOM_STEP * multi;
+		}
+
+		if (keyRotateL.isKeyDown()) {
+			yRot += ROTATE_STEP * multi;
+		}
+		if (keyRotateR.isKeyDown()) {
+			yRot -= ROTATE_STEP * multi;
+		}
+
+		if (keyRotateU.isKeyDown()) {
+			xRot += ROTATE_STEP * multi;
+		}
+		if (keyRotateD.isKeyDown()) {
+			xRot -= ROTATE_STEP * multi;
+		}
+	}
+
 	@SubscribeEvent
 	public void onKeyInput(InputEvent.KeyInputEvent evt) {
 		boolean mod = modifierKeyPressed();
@@ -173,29 +207,6 @@ public class OrthoViewHandler {
 		}
 	}
 
-	private void updateZoomAndRotation(double multi) {
-		if (keyZoomIn.isKeyDown()) {
-			zoom *= 1 - ZOOM_STEP * multi;
-		}
-		if (keyZoomOut.isKeyDown()) {
-			zoom *= 1 + ZOOM_STEP * multi;
-		}
-
-		if (keyRotateL.isKeyDown()) {
-			yRot += ROTATE_STEP * multi;
-		}
-		if (keyRotateR.isKeyDown()) {
-			yRot -= ROTATE_STEP * multi;
-		}
-
-		if (keyRotateU.isKeyDown()) {
-			xRot += ROTATE_STEP * multi;
-		}
-		if (keyRotateD.isKeyDown()) {
-			xRot -= ROTATE_STEP * multi;
-		}
-	}
-
 	@SubscribeEvent
 	public void onClientTickEvent(final ClientTickEvent event) {
 		if (!enabled || event.phase != Phase.START) {
@@ -203,6 +214,18 @@ public class OrthoViewHandler {
 		}
 
 		tick++;
+	}
+
+	@SubscribeEvent
+	public void cameraSetup(CameraSetup event) {
+		if (!enabled) {
+			return;
+		}
+
+		if (!freeCam) {
+			event.setPitch(xRot);
+			event.setYaw(yRot + 180);
+		}
 	}
 
 	@SubscribeEvent
@@ -231,17 +254,5 @@ public class OrthoViewHandler {
 		RenderSystem.matrixMode(GL_PROJECTION);
 		RenderSystem.loadIdentity();
 		RenderSystem.ortho(-width, width, -height, height, clip ? 0 : -9999, 9999);
-	}
-
-	@SubscribeEvent
-	public void cameraSetup(CameraSetup event) {
-		if (!enabled) {
-			return;
-		}
-
-		if (!freeCam) {
-			event.setPitch(xRot);
-			event.setYaw(yRot + 180);
-		}
 	}
 }
