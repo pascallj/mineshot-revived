@@ -14,7 +14,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_KP_SUBTRACT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_CONTROL;
 import static org.lwjgl.opengl.GL11.GL_PROJECTION;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
@@ -28,7 +28,6 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 import nl.pascalroeleven.minecraft.mineshotrevived.client.util.ChatUtils;
-import nl.pascalroeleven.minecraft.mineshotrevived.client.wrapper.Projection;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.FORGE)
 public class OrthoViewHandler {
@@ -206,7 +205,6 @@ public class OrthoViewHandler {
 		tick++;
 	}
 
-	@SuppressWarnings("deprecation")
 	@SubscribeEvent
 	public void onFogDensity(EntityViewRenderEvent.FogDensity evt) {
 		if (!enabled) {
@@ -230,10 +228,9 @@ public class OrthoViewHandler {
 		float height = zoom;
 
 		// override projection matrix
-		GlStateManager.matrixMode(GL_PROJECTION);
-		GlStateManager.loadIdentity();
-
-		Projection.ortho(-width, width, -height, height, clip ? 0 : -9999, 9999);
+		RenderSystem.matrixMode(GL_PROJECTION);
+		RenderSystem.loadIdentity();
+		RenderSystem.ortho(-width, width, -height, height, clip ? 0 : -9999, 9999);
 	}
 
 	@SubscribeEvent
