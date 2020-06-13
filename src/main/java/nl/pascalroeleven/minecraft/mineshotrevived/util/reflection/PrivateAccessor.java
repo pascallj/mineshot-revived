@@ -33,9 +33,9 @@ public interface PrivateAccessor {
 		}
 	}
 
-	default void setDirection(Minecraft mc, float pitchIn, float yawIn) {
+	default void setDirection(Minecraft mc, float yawIn, float pitchIn) {
 		try {
-			setDirection.invoke(mc.gameRenderer.getActiveRenderInfo(), pitchIn, yawIn);
+			setDirection.invoke(mc.gameRenderer.getActiveRenderInfo(), yawIn, pitchIn);
 		} catch (Exception ex) {
 			L.error("setDirection() failed", ex);
 		}
