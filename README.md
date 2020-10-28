@@ -1,5 +1,7 @@
 # Mineshot Revived
 
+> **The future of this version of Mineshot Revived is unsure. I also developed a version for Fabric and while doing that, I noticed that I much prefer the flexibilty and portability of that framework. So check [that version](https://github.com/pascallj/mineshot-revived-fabric) out if you are interested.**
+
 Mineshot Revived is a mod for Minecraft (using Forge) for creating high-resolution screenshots, optionally using the orthographic camera.
 
 The majority of the code is based on the original [Mineshot by Barracuda](https://github.com/ata4/mineshot). So many thanks to the original creator. Unfortunately that project seems dead, probably because of the big changes which were introduced.
