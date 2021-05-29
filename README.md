@@ -8,7 +8,7 @@ The majority of the code is based on the original [Mineshot by Barracuda](https:
 
 The main purpose of this project is to keep Mineshot alive by updating for newer Minecraft/Forge versions. For now, the project is in ALPHA-stage. This means that only part of the original Mineshot functions is available and those that are, are still very experimental. However you are very welcome to test this project and create issues.
 
-Only Minecraft 1.15.2 is currently supported.
+Only Minecraft 1.15.2 and 1.16.5 are currently supported.
 
 ## Usage
 

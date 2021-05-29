@@ -88,7 +88,7 @@ public class FramebufferCapturer {
 
 		// read texture from framebuffer if enabled, otherwise use slower glReadPixels
 		if (fb.framebufferObject >= 0) {
-			glBindTexture(GL_TEXTURE_2D, fb.framebufferTexture);
+			glBindTexture(GL_TEXTURE_2D, fb.getFrameBufferTexture());
 			glGetTexImage(GL_TEXTURE_2D, 0, format, TYPE, bb);
 		} else {
 			glReadPixels(0, 0, MC.getMainWindow().getFramebufferWidth(), MC.getMainWindow().getFramebufferHeight(),
