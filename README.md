@@ -24,6 +24,7 @@ The controls are the same as in the original Mineshot:
 * Numpad 3: Side view
 * Numpad 5: Switch between perspective and orthograpic projection
 * MOD-key (Left Control) + Numpad 5: Switch between fixed and free camera.
+* MOD-key (Left Control) + Numpad 4, 6, 8, or 2: Incremental instead of smooth rotation
 * Plus: Zoom in
 * Minus: Zoom out
 
