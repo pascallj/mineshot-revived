@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.NewChatGui;
+import net.minecraft.util.text.Color;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.util.text.event.ClickEvent;
@@ -14,7 +15,7 @@ import net.minecraft.util.text.event.ClickEvent;
 public class ChatUtils {
 	private static final Minecraft MC = Minecraft.getInstance();
 
-	public static void print(String msg, TextFormatting format, Object... args) {
+	public static void print(String msg, Color format, Object... args) {
 		if (MC.ingameGUI == null) {
 			return;
 		}

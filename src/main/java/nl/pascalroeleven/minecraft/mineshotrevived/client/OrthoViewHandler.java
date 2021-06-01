@@ -18,6 +18,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.settings.PointOfView;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.EntityViewRenderEvent.CameraSetup;
 import net.minecraftforge.client.event.InputEvent;
@@ -77,7 +78,7 @@ public class OrthoViewHandler implements PrivateAccessor {
 	private int tickPrevious;
 	private double partialPrevious;
 
-	private int thirdPersonView;
+	private PointOfView thirdPersonView;
 
 	public OrthoViewHandler() {
 		ClientRegistry.registerKeyBinding(keyToggle);
@@ -228,8 +229,8 @@ public class OrthoViewHandler implements PrivateAccessor {
 
 		if (!freeCam) {
 			// Turn off thirdPersonView off temporary
-			thirdPersonView = MC.gameSettings.thirdPersonView;
-			MC.gameSettings.thirdPersonView = 0;
+			thirdPersonView = MC.gameSettings.getPointOfView();
+			MC.gameSettings.setPointOfView(PointOfView.FIRST_PERSON);
 		}
 
 	}
@@ -249,7 +250,7 @@ public class OrthoViewHandler implements PrivateAccessor {
 			// cameras
 			setDirection(MC, yRot + 180.0F, xRot);
 
-			if (thirdPersonView > 0) {
+			if (thirdPersonView != PointOfView.FIRST_PERSON) {
 				movePosition(MC, -calcCameraDistance(MC, 4.0D), 0.0D, 0.0D);
 
 				// Make sure the player is rendered for this frame (side effect of temporarily
@@ -258,7 +259,7 @@ public class OrthoViewHandler implements PrivateAccessor {
 			}
 
 			// Set thirdPersonView back to what it was
-			MC.gameSettings.thirdPersonView = thirdPersonView;
+			MC.gameSettings.setPointOfView(thirdPersonView);
 
 			event.setPitch(xRot);
 			event.setYaw(yRot + 180);
